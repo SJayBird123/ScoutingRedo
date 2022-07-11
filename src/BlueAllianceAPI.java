@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 
 public class BlueAllianceAPI {
 
@@ -59,6 +60,24 @@ public class BlueAllianceAPI {
         Collections.sort(countries);
         return countries;
     }
+
+   public LinkedHashMap<String, String> returnAllEvents(String country) throws Exception {
+        JSONArray eventsRaw = apiCall("events/" + year + "/simple");
+        LinkedHashMap<String, String> events = new LinkedHashMap<String, String>();
+
+        for (Object objMatch: eventsRaw) {
+            JSONObject eventRawSpecific = (JSONObject) objMatch;
+
+            if (!country.equals(eventRawSpecific.get("country"))) {
+                continue;
+            }
+            events.put((String) eventRawSpecific.get("key"),(String) eventRawSpecific.get("name"));
+        }
+
+        return events;
+    }
+
+
 
 
 }

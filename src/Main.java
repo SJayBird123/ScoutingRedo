@@ -22,8 +22,12 @@ public class Main {
             Prompt UI = new Prompt();
 
             ArrayList<String> countries = API.returnCountries();
-
             String selectedCountry = UI.selectCountry(countries);
+
+            LinkedHashMap<String,String> eventsInCountry= API.returnAllEvents(selectedCountry);
+            String selectedEventKey = UI.selectEvent(eventsInCountry);
+
+            System.out.println(selectedEventKey);
 
         }catch(Exception e){
 
