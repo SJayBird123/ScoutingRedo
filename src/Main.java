@@ -15,11 +15,16 @@ import java.util.HashMap;
 public class Main {
 
     static String apiKey = "khASaff3i538qIxLZuxqC3g6dv55ZLHC8ztwsNfYPAHenKU6ymjwSfE8HqMvqNqL";
+    private static int year;
 
     public static void main(String[] args) throws Exception {
         try {
-            BlueAllianceAPI API = new BlueAllianceAPI(apiKey);
+
             Prompt UI = new Prompt();
+
+            year = UI.selectYear();
+
+            BlueAllianceAPI API = new BlueAllianceAPI(apiKey,year);
 
             ArrayList<String> countries = API.returnCountries();
             String selectedCountry = UI.selectCountry(countries);

@@ -9,15 +9,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class BlueAllianceAPI {
 
     private final String apiKey;
 
-    private int year = 2022;
+    private int year;
 
-    public BlueAllianceAPI(String apiKey) {
+    public BlueAllianceAPI(String apiKey, int currentYear) {
         this.apiKey = apiKey;
+        year = currentYear;
     }
 
     public JSONArray apiCall(String endpoint) throws Exception {
@@ -47,12 +49,13 @@ public class BlueAllianceAPI {
             boolean isCountryPresent = false;
 
             for(String addedCountry : countries){
-                if(matchCountry.equals(addedCountry)){
+                if (matchCountry.equals(addedCountry)) {
                     isCountryPresent = true;
+                    break;
                 }
             }
 
-            if(isCountryPresent == false){
+            if(!isCountryPresent){
                 countries.add(matchCountry);
             }
         }
@@ -61,7 +64,7 @@ public class BlueAllianceAPI {
         return countries;
     }
 
-   public LinkedHashMap<String, String> returnAllEvents(String country) throws Exception {
+    public LinkedHashMap<String, String> returnAllEvents(String country) throws Exception {
         JSONArray eventsRaw = apiCall("events/" + year + "/simple");
         LinkedHashMap<String, String> events = new LinkedHashMap<String, String>();
 
@@ -79,5 +82,66 @@ public class BlueAllianceAPI {
 
 
 
+    public static class IndividualTeamScore {
+        int teamId;
+        String robotNumber;
+        int matchNumber;
 
+        //Year Specific Stuff
+        String taxi;
+        String endgame;
+
+        public int getClimbPoints() {
+            switch (endgame) {
+                case "Low":
+                    return 4;
+                case "Mid":
+                    return 6;
+                case "High":
+                    return 10;
+                case "Traversal":
+                    return 15;
+                case "None":
+                default:
+                    return 0;
+            }
+        }
+    }
+
+    public static class AllianceScore {
+        int matchNumber;
+
+        /**
+         * Alliance score at end of match (includes fouls)
+         */
+        int score;
+        int autoScore;
+
+        /**
+         * Number of foul points from the OPPOSING alliance
+         */
+        int foulPoints;
+        int teleopPoints;
+
+        //Year Specific Stuff
+        int teleopCargoLower;
+        int teleopCargoUpper;
+        int autoCargoScore;
+        int endgamePoints;
+
+        List<IndividualTeamScore> teams;
+    }
+
+    public static class Match{
+        int matchNumber;
+        AllianceScore red;
+        AllianceScore blue;
+
+        public List<IndividualTeamScore> getAllBreakdowns() {
+            List<IndividualTeamScore> result = new ArrayList<>();
+            result.addAll(red.teams);
+            result.addAll(blue.teams);
+            return result;
+        }
+    }
 }
