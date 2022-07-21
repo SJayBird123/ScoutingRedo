@@ -16,6 +16,7 @@ public class Main {
 
     static String apiKey = "khASaff3i538qIxLZuxqC3g6dv55ZLHC8ztwsNfYPAHenKU6ymjwSfE8HqMvqNqL";
     private static int year;
+    private static int currentYear = 2022;
 
     public static void main(String[] args) throws Exception {
         try {
@@ -24,15 +25,18 @@ public class Main {
 
             year = UI.selectYear();
 
-            BlueAllianceAPI API = new BlueAllianceAPI(apiKey,year);
+            BlueAllianceAPI API = new BlueAllianceAPI(apiKey,currentYear, year);
 
             ArrayList<String> countries = API.returnCountries();
             String selectedCountry = UI.selectCountry(countries);
 
+
             LinkedHashMap<String,String> eventsInCountry= API.returnAllEvents(selectedCountry);
             String selectedEventKey = UI.selectEvent(eventsInCountry);
-
             System.out.println(selectedEventKey);
+
+            List<BlueAllianceAPI.Match> matches = API.getMatchBreakdowns(selectedEventKey);
+
 
         }catch(Exception e){
 
