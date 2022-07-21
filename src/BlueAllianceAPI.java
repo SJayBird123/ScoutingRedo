@@ -21,7 +21,7 @@ public class BlueAllianceAPI {
     public BlueAllianceAPI(String apiKey, int currentYear, int selectedYear) {
         this.apiKey = apiKey;
         year = selectedYear;
-        currentYear = this.currentYear;
+        this.currentYear = currentYear;
     }
 
     public JSONArray apiCall(String endpoint) throws Exception {
@@ -43,7 +43,7 @@ public class BlueAllianceAPI {
 
     public ArrayList<String> returnCountries() throws Exception {
         JSONArray eventsRaw = apiCall("events/" + year + "/simple");
-        ArrayList<String> countries = new ArrayList<String>();
+        ArrayList<String> countries = new ArrayList<>();
 
         for (Object objMatch: eventsRaw) {
             JSONObject eventRawSpecific = (JSONObject) objMatch;
@@ -72,7 +72,7 @@ public class BlueAllianceAPI {
 
     public LinkedHashMap<String, String> returnAllEvents(String country) throws Exception {
         JSONArray eventsRaw = apiCall("events/" + year + "/simple");
-        LinkedHashMap<String, String> events = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> events = new LinkedHashMap<>();
 
         for (Object objMatch: eventsRaw) {
             JSONObject eventRawSpecific = (JSONObject) objMatch;
@@ -133,7 +133,7 @@ public class BlueAllianceAPI {
         alliance.autoScore = ((Number) scoreBreakdownByAlliance.get("autoPoints")).intValue();
         alliance.endgamePoints = ((Number) scoreBreakdownByAlliance.get("endgamePoints")).intValue();
         alliance.foulPoints = ((Number) scoreBreakdownByAlliance.get("foulPoints")).intValue();
-        alliance.matchNumber = ((Number) rawMatch.get("match_number")).intValue();;
+        alliance.matchNumber = ((Number) rawMatch.get("match_number")).intValue();
         alliance.score = ((Number) scoreBreakdownByAlliance.get("totalPoints")).intValue();
         alliance.teleopCargoLower =
                 ((Number) scoreBreakdownByAlliance.get("teleopCargoLowerBlue")).intValue() +
@@ -176,19 +176,13 @@ public class BlueAllianceAPI {
         String endgame;
 
         public int getClimbPoints() {
-            switch (endgame) {
-                case "Low":
-                    return 4;
-                case "Mid":
-                    return 6;
-                case "High":
-                    return 10;
-                case "Traversal":
-                    return 15;
-                case "None":
-                default:
-                    return 0;
-            }
+            return switch (endgame) {
+                case "Low" -> 4;
+                case "Mid" -> 6;
+                case "High" -> 10;
+                case "Traversal" -> 15;
+                default -> 0;
+            };
         }
     }
 
