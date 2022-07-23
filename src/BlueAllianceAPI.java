@@ -166,7 +166,7 @@ public class BlueAllianceAPI {
     }
 
     public List<Integer> getTeamNames(String eventId) throws Exception {
-        JSONArray teamNamesRaw = apiCall("events/" + eventId + "/teams/keys");
+        JSONArray teamNamesRaw = apiCall("event/" + eventId + "/teams/keys");
         List<Integer> teamNames= new ArrayList<>();
 
         for(Object name : teamNamesRaw){

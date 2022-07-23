@@ -1,15 +1,15 @@
+import Jama.Matrix;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.ToIntFunction;
 
-import Jama.Matrix;
 
-
-public class Math {
+public class Calculations {
 
     public Map<Integer, Double> calculateOPR(ToIntFunction<BlueAllianceAPI.AllianceScore> extractScore, boolean calcDPR,
-        List<BlueAllianceAPI.Match>matches, List<Integer> teamNames) {
+                                             List<BlueAllianceAPI.Match>matches, List<Integer> teamNames) {
 
         System.out.println("calculating OPR for " + teamNames.size() + " teams, " + matches.size() + " matches");
 

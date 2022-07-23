@@ -1,12 +1,7 @@
-import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.*;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -18,7 +13,7 @@ public class Main {
         try {
 
             Prompt UI = new Prompt();
-            Math Calculations = new Math();
+            Calculations calc = new Calculations();
 
             year = UI.selectYear();
 
@@ -35,8 +30,9 @@ public class Main {
             List<BlueAllianceAPI.Match> matches = API.getMatchBreakdowns(selectedEventKey);
             List<Integer> teamNames = API.getTeamNames(selectedEventKey);
 
-            Map<Integer, Double> OPR = Calculations.calculateOPR(alliance -> alliance.score - alliance.foulPoints, false,
-                    matches, teamNames);
+
+            Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints, false,
+                   matches, teamNames);
 
             System.out.println("OPR");
             System.out.println(OPR);
