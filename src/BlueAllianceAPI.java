@@ -41,6 +41,7 @@ public class BlueAllianceAPI {
         }
     }
 
+
     public ArrayList<String> returnCountries() throws Exception {
         JSONArray eventsRaw = apiCall("events/" + year + "/simple");
         ArrayList<String> countries = new ArrayList<>();
@@ -85,7 +86,6 @@ public class BlueAllianceAPI {
 
         return events;
     }
-
 
     public List<Match> getMatchBreakdowns(String eventId) throws Exception {
         JSONArray matches = apiCall("event/" + eventId + "/matches");
@@ -163,6 +163,18 @@ public class BlueAllianceAPI {
         }
 
         return alliance;
+    }
+
+    public List<Integer> getTeamNames(String eventId) throws Exception {
+        JSONArray teamNamesRaw = apiCall("events/" + eventId + "/teams/keys");
+        List<Integer> teamNames= new ArrayList<>();
+
+        for(Object name : teamNamesRaw){
+            teamNames.add (Integer.parseInt(((String) name).substring(3)));
+        }
+
+        Collections.sort(teamNames);
+        return teamNames;
     }
 
 
