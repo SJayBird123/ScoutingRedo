@@ -165,12 +165,39 @@ public class BlueAllianceAPI {
         return alliance;
     }
 
-    public List<Integer> getTeamNames(String eventId) throws Exception {
+    /* Weird problem where for 2022week0 there were teams in the finals that didnt play any quals !?!?!?
+    public List<Integer> getTeamNamesBad(String eventId) throws Exception {
         JSONArray teamNamesRaw = apiCall("event/" + eventId + "/teams/keys");
         List<Integer> teamNames= new ArrayList<>();
 
         for(Object name : teamNamesRaw){
             teamNames.add (Integer.parseInt(((String) name).substring(3)));
+        }
+
+        Collections.sort(teamNames);
+        return teamNames;
+    }
+    */
+
+    public List<Integer> getTeamNames(String eventId,List<BlueAllianceAPI.Match> matches) throws Exception {
+        List<Integer> teamNames= new ArrayList<>();
+
+        for( BlueAllianceAPI.Match match : matches){
+            List<IndividualTeamInfo> resultsRaw = match.getAllBreakdowns();
+            for(IndividualTeamInfo teamInfo : resultsRaw){
+                int teamName = teamInfo.teamId;
+                boolean isIn = false;
+
+                for(Integer E: teamNames){
+                    if(E == teamName){
+                        isIn = true;
+                        break;
+                    }
+                }
+
+                if(!isIn)
+                    teamNames.add(teamName);
+            }
         }
 
         Collections.sort(teamNames);

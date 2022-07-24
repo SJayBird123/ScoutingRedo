@@ -28,7 +28,7 @@ public class Main {
             System.out.println(selectedEventKey);
 
             List<BlueAllianceAPI.Match> matches = API.getMatchBreakdowns(selectedEventKey);
-            List<Integer> teamNames = API.getTeamNames(selectedEventKey);
+            List<Integer> teamNames = API.getTeamNames(selectedEventKey, matches);
 
 
             Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints, false,
@@ -36,6 +36,7 @@ public class Main {
 
             System.out.println("OPR");
             System.out.println(OPR);
+            System.out.println(teamNames);
 
         }catch(Exception e){
 
