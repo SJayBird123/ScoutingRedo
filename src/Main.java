@@ -17,11 +17,10 @@ public class Main {
 
             year = UI.selectYear();
 
-            BlueAllianceAPI API = new BlueAllianceAPI(apiKey,currentYear, year);
+            BlueAllianceAPI API = new BlueAllianceAPI(apiKey, currentYear, year);
 
             ArrayList<String> countries = API.returnCountries();
             String selectedCountry = UI.selectCountry(countries);
-
 
             LinkedHashMap<String,String> eventsInCountry= API.returnAllEvents(selectedCountry);
             String selectedEventKey = UI.selectEvent(eventsInCountry);
@@ -30,9 +29,7 @@ public class Main {
             List<BlueAllianceAPI.Match> matches = API.getMatchBreakdowns(selectedEventKey);
             List<Integer> teamNames = API.getTeamNames(selectedEventKey, matches);
 
-
-            Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints, false,
-                   matches, teamNames);
+            Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints, matches, teamNames);
 
             System.out.println("OPR");
             System.out.println(OPR);
