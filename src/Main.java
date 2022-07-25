@@ -54,8 +54,11 @@ public class Main {
             Map<Integer, Double> lowOpr = calc.calculateOPR(alliance -> alliance.teleopCargoLower);
             Map<Integer, Double> hangOprAdjusted = calc.hangOPRAdjustedCalc(endgameOPR,scoresByTeam);
 
+            Map<String, Double>[] OPRs = new Map[] {
+                    OPR, autoOPR, teleopOPR, endgameOPR, DPR, penaltyDPR, highOpr, lowOpr, hangOprAdjusted
+            };
 
-            System.out.println(hangOprAdjusted);
+            ExcelBuilder ExcelBuilder = new ExcelBuilder(OPRs, teamNames, scoresByTeam, matches);
 
         }catch(Exception e){
 
