@@ -1,16 +1,11 @@
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ExcelBuilder {
     Map<String, Double>[] OPRs;
@@ -19,8 +14,8 @@ public class ExcelBuilder {
     Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam;
 
     public ExcelBuilder(Map<String, Double>[] OPRs, List<Integer> teamNames,
-                        Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam,List<BlueAllianceAPI.Match> matches) {
-
+                        Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam,
+                        List<BlueAllianceAPI.Match> matches) {
         this.OPRs = OPRs;
         this.teamNames = teamNames;
         this.matches = matches;
@@ -33,7 +28,7 @@ public class ExcelBuilder {
 
         XSSFSheet summarySheet = workbook.createSheet("Summary");
         summarySheet(summarySheet);
-
+/*
         for (int teamname : this.teamNames) {
             XSSFSheet sheet = workbook.createSheet(Integer.toString(teamname));
             List<BlueAllianceAPI.IndividualTeamInfo> teamMatches = scoresByTeam.get(teamname);
@@ -79,7 +74,7 @@ public class ExcelBuilder {
                 robotNumberCell.setCellValue(match.robotNumber);
             }
         }
-
+*/
         return workbook;
     }
 
@@ -88,59 +83,63 @@ public class ExcelBuilder {
             Row row = sheet.createRow(0);
 
             row.createCell(0).setCellValue("Team #");
-            row.createCell(1).setCellValue("None #");
-            row.createCell(2).setCellValue("Low #");
-            row.createCell(3).setCellValue("Mid #");
-            row.createCell(4).setCellValue("High #");
-            row.createCell(5).setCellValue("Traversal #");
-            row.createCell(6).setCellValue("Average Hang");
-            row.createCell(7).setCellValue("OPR");
-            row.createCell(8).setCellValue("DPR");
+            row.createCell(1).setCellValue("OPR");
+            row.createCell(2).setCellValue("Auto OPR");
+            row.createCell(3).setCellValue("Teleop OPR");
+            row.createCell(4).setCellValue("Endgame OPR");
+            row.createCell(5).setCellValue("DPR");
+            row.createCell(6).setCellValue("penalty DPR");
 
-            row.createCell(9).setCellValue("Auto OPR");
-            row.createCell(10).setCellValue("Low OPR");
-            row.createCell(11).setCellValue("High OPR");
-            row.createCell(12).setCellValue("Teleop OPR");
-            row.createCell(13).setCellValue("Endgame OPR (adjusted)");
-            row.createCell(14).setCellValue("penaltyDPR");
+            row.createCell(7).setCellValue("Low OPR");
+            row.createCell(8).setCellValue("High OPR");
+            row.createCell(9).setCellValue("Endgame OPR (adjusted)");
+
+            row.createCell(10).setCellValue("Average Hang");
+            row.createCell(11).setCellValue("None #");
+            row.createCell(12).setCellValue("Low #");
+            row.createCell(13).setCellValue("Mid #");
+            row.createCell(14).setCellValue("High #");
+            row.createCell(15).setCellValue("Traversal #");
         }
 
         int rowNum = 1;
 
         for (int teamKey : teamNames) {
-
-            endGames currentTeamEndgames = new endGames(teamKey);
-
-            for (BlueAllianceAPI.IndividualTeamInfo score : scoresByTeam.get(teamKey)) {
-                currentTeamEndgames.endgameAddMethod(score.endgame);
-            }
-
-            int endgamesTotal = 0;
-            for (int value : currentTeamEndgames.endGameTotals.values()) {
-                endgamesTotal += value;
-            }
-
-            double averageHangScore = Math.round(
-                    (currentTeamEndgames.endGameTotals.get("Low")*4+
-                            currentTeamEndgames.endGameTotals.get("Mid")*6+
-                            currentTeamEndgames.endGameTotals.get("High")*10+
-                            currentTeamEndgames.endGameTotals.get("Traversal")*15.0)/
-                            (endgamesTotal)*100
-            )/100.0;
-
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(teamKey);
-            row.createCell(1).setCellValue(currentTeamEndgames.endGameTotals.get("None"));
-            row.createCell(2).setCellValue(currentTeamEndgames.endGameTotals.get("Low"));
-            row.createCell(3).setCellValue(currentTeamEndgames.endGameTotals.get("Mid"));
-            row.createCell(4).setCellValue(currentTeamEndgames.endGameTotals.get("High"));
-            row.createCell(5).setCellValue(currentTeamEndgames.endGameTotals.get("Traversal"));
-            row.createCell(6).setCellValue(averageHangScore);
 
             for(int i =0; i<OPRs.length;i++){
                 double opr = OPRs[i].getOrDefault(teamKey, Double.NaN);
                 if(!Double.isNaN(opr))
-                    row.createCell(7+i).setCellValue(Math.round(10*opr)/10.0);
+                    row.createCell(i).setCellValue(Math.round(10*opr)/10.0);
+            }
+
+            {
+                endGames currentTeamEndgames = new endGames(teamKey);
+
+                for (BlueAllianceAPI.IndividualTeamInfo score : scoresByTeam.get(teamKey)) {
+                    currentTeamEndgames.endgameAddMethod(score.endgame);
+                }
+
+                int endgamesTotal = 0;
+                for (int value : currentTeamEndgames.endGameTotals.values()) {
+                    endgamesTotal += value;
+                }
+
+                double averageHangScore = Math.round(
+                        (currentTeamEndgames.endGameTotals.get("Low") * 4 +
+                                currentTeamEndgames.endGameTotals.get("Mid") * 6 +
+                                currentTeamEndgames.endGameTotals.get("High") * 10 +
+                                currentTeamEndgames.endGameTotals.get("Traversal") * 15.0) /
+                                (endgamesTotal) * 100
+                ) / 100.0;
+
+                row.createCell(0).setCellValue(teamKey);
+                row.createCell(1).setCellValue(currentTeamEndgames.endGameTotals.get("None"));
+                row.createCell(2).setCellValue(currentTeamEndgames.endGameTotals.get("Low"));
+                row.createCell(3).setCellValue(currentTeamEndgames.endGameTotals.get("Mid"));
+                row.createCell(4).setCellValue(currentTeamEndgames.endGameTotals.get("High"));
+                row.createCell(5).setCellValue(currentTeamEndgames.endGameTotals.get("Traversal"));
+                row.createCell(6).setCellValue(averageHangScore);
             }
         }
 

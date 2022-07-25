@@ -55,7 +55,7 @@ public class Main {
             Map<Integer, Double> hangOprAdjusted = calc.hangOPRAdjustedCalc(endgameOPR,scoresByTeam);
 
             Map<String, Double>[] OPRs = new Map[] {
-                    OPR, autoOPR, teleopOPR, endgameOPR, DPR, penaltyDPR, highOpr, lowOpr, hangOprAdjusted
+                    OPR, autoOPR, teleopOPR, endgameOPR, DPR, penaltyDPR, lowOpr, highOpr, hangOprAdjusted
             };
 
             ExcelBuilder ExcelBuilder = new ExcelBuilder(OPRs, teamNames, scoresByTeam, matches);
