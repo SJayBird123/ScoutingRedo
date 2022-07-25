@@ -13,5 +13,6 @@
     <orderEntry type="library" name="Jama-1.0.3 (2)" level="project" />
     <orderEntry type="library" name="poi-5.2.0" level="project" />
     <orderEntry type="library" name="poi-ooxml-5.2.0" level="project" />
+    <orderEntry type="library" name="poi-ooxml-full-5.2.0" level="project" />
   </component>
 </module>

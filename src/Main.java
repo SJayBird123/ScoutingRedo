@@ -1,3 +1,9 @@
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.*;
 
 public class Main {
@@ -60,7 +66,41 @@ public class Main {
 
 
             ExcelBuilder ExcelBuilder = new ExcelBuilder(OPRs, teamNames, scoresByTeam, matches);
-            //XSSFWorkbook workbook = ExcelBuilder.build();
+            XSSFWorkbook workbook = ExcelBuilder.build();
+
+            File saveFile;
+            if (args.length >= 2) {
+                saveFile = new File(args[2]);
+            } else {
+                // UI to select file
+                JFrame parentFrame = new JFrame();
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Save File");
+
+                fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("spreadsheet", "xlsx"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter("spreadsheet", "xlsx"));
+                fileChooser.setSelectedFile(new File("matches_" + selectedEventKey + ".xlsx"));
+                if (fileChooser.showSaveDialog(parentFrame) != JFileChooser.APPROVE_OPTION) {
+                    System.err.println("You fool");
+                    System.exit(-10);
+                }
+                saveFile = fileChooser.getSelectedFile();
+            }
+
+            // Save workbook to file
+            try (FileOutputStream outputStream = new FileOutputStream(saveFile)) {
+                workbook.write(outputStream);
+            }
+
+            System.exit(0);
+
+
+
+
+
+
+
+
 
         }catch(Exception e){
 
