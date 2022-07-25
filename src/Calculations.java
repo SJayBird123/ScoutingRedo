@@ -8,8 +8,15 @@ import java.util.function.ToIntFunction;
 
 public class Calculations {
 
-    public Map<Integer, Double> calculateOPR(ToIntFunction<BlueAllianceAPI.AllianceScore> extractScore,
-                                             List<BlueAllianceAPI.Match>matches, List<Integer> teamNames) {
+    List<BlueAllianceAPI.Match> matches;
+    List<Integer> teamNames;
+
+    public Calculations(List<BlueAllianceAPI.Match> matches, List<Integer> teamNames){
+        this.matches = matches;
+        this.teamNames = teamNames;
+    }
+
+    public Map<Integer, Double> calculateOPR(ToIntFunction<BlueAllianceAPI.AllianceScore> extractScore) {
 
         System.out.println("calculating OPR for " + teamNames.size() + " teams, " + matches.size() + " matches");
 
@@ -64,8 +71,7 @@ public class Calculations {
 
     }
 
-    public Map<Integer, Double> calculateDPR(ToIntFunction<BlueAllianceAPI.AllianceScore> extractScore,
-                                             List<BlueAllianceAPI.Match>matches, List<Integer> teamNames) {
+    public Map<Integer, Double> calculateDPR(ToIntFunction<BlueAllianceAPI.AllianceScore> extractScore) {
 
         System.out.println("calculating OPR for " + teamNames.size() + " teams, " + matches.size() + " matches");
 

@@ -195,7 +195,7 @@ public class BlueAllianceAPI {
                     }
                 }
 
-                if(!isIn)
+                if(!isIn || teamNames.size()==0)
                     teamNames.add(teamName);
             }
         }

@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
 
@@ -13,8 +10,6 @@ public class Main {
         try {
 
             Prompt UI = new Prompt();
-            Calculations calc = new Calculations();
-
             year = UI.selectYear();
 
             BlueAllianceAPI API = new BlueAllianceAPI(apiKey, currentYear, year);
@@ -29,7 +24,21 @@ public class Main {
             List<BlueAllianceAPI.Match> matches = API.getMatchBreakdowns(selectedEventKey);
             List<Integer> teamNames = API.getTeamNames(selectedEventKey, matches);
 
-            Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints, matches, teamNames);
+
+            Calculations calc = new Calculations(matches,teamNames);
+
+            Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints);
+            Map<Integer, Double> autoOPR = calc.calculateOPR(alliance -> alliance.autoScore);
+            Map<Integer, Double> teleopOPR = calc.calculateOPR(alliance -> alliance.teleopPoints);
+            Map<Integer, Double> endgameOPR = calc.calculateOPR(alliance -> alliance.endgamePoints);
+            Map<Integer, Double> DPR = calc.calculateDPR(alliance -> alliance.score - alliance.foulPoints);
+            Map<Integer, Double> penaltyDPR = calc.calculateOPR(alliance -> alliance.autoScore);
+
+            Map<Integer, Double> highOpr = calc.calculateOPR(alliance -> alliance.teleopCargoUpper);
+            Map<Integer, Double> lowOpr = calc.calculateOPR(alliance -> alliance.teleopCargoLower);
+
+            Map<Integer, Double> hangOprAdjusted = new HashMap<Integer, Double>();
+
 
             System.out.println("OPR");
             System.out.println(OPR);
