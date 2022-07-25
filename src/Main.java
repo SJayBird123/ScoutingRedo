@@ -32,7 +32,7 @@ public class Main {
             Map<Integer, Double> teleopOPR = calc.calculateOPR(alliance -> alliance.teleopPoints);
             Map<Integer, Double> endgameOPR = calc.calculateOPR(alliance -> alliance.endgamePoints);
             Map<Integer, Double> DPR = calc.calculateDPR(alliance -> alliance.score - alliance.foulPoints);
-            Map<Integer, Double> penaltyDPR = calc.calculateOPR(alliance -> alliance.autoScore);
+            Map<Integer, Double> penaltyDPR = calc.calculateOPR(alliance -> alliance.foulPoints);
 
             Map<Integer, Double> highOpr = calc.calculateOPR(alliance -> alliance.teleopCargoUpper);
             Map<Integer, Double> lowOpr = calc.calculateOPR(alliance -> alliance.teleopCargoLower);
