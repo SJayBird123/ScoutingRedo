@@ -27,6 +27,30 @@ public class Main {
 
             Calculations calc = new Calculations(matches,teamNames);
 
+
+
+
+            Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam = new HashMap<Integer, List<BlueAllianceAPI.IndividualTeamInfo>>();
+
+            // go through each match
+            for(BlueAllianceAPI.Match match : matches){
+                // go though each robot-specific score in the match
+                for(BlueAllianceAPI.IndividualTeamInfo eachIndividualTeamInfoBreakDown : match.getAllBreakdowns()) {
+                    //Take the match per team and add the score breakdown
+                    List<BlueAllianceAPI.IndividualTeamInfo> scores = scoresByTeam.get(eachIndividualTeamInfoBreakDown.teamId);
+                    if(scores == null){
+                        scores = new ArrayList<>();
+                        scoresByTeam.put(eachIndividualTeamInfoBreakDown.teamId,scores);
+                    }
+
+                    scores.add(eachIndividualTeamInfoBreakDown);
+                }
+            }
+
+
+
+
+
             Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints);
             Map<Integer, Double> autoOPR = calc.calculateOPR(alliance -> alliance.autoScore);
             Map<Integer, Double> teleopOPR = calc.calculateOPR(alliance -> alliance.teleopPoints);
@@ -36,18 +60,13 @@ public class Main {
 
             Map<Integer, Double> highOpr = calc.calculateOPR(alliance -> alliance.teleopCargoUpper);
             Map<Integer, Double> lowOpr = calc.calculateOPR(alliance -> alliance.teleopCargoLower);
+            Map<Integer, Double> hangOprAdjusted = calc.hangOPRAdjustedCalc(endgameOPR,scoresByTeam);
 
-            Map<Integer, Double> hangOprAdjusted = new HashMap<Integer, Double>();
 
 
-            System.out.println(OPR);
-            System.out.println(autoOPR);
-            System.out.println(teleopOPR);
-            System.out.println(endgameOPR);
-            System.out.println(DPR);
-            System.out.println(penaltyDPR);
-            System.out.println(highOpr);
-            System.out.println(lowOpr);
+
+
+            System.out.println(hangOprAdjusted);
 
         }catch(Exception e){
 

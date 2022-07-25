@@ -126,4 +126,24 @@ public class Calculations {
 
     }
 
+    public HashMap<Integer, Double> hangOPRAdjustedCalc(Map<Integer, Double> endgameOPRAll,
+        Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam){
+
+        HashMap<Integer, Double> hangOprAdjusted = new HashMap<Integer, Double>();
+
+        for (int teamName : teamNames) {
+            double endgameOPREach = endgameOPRAll.getOrDefault(teamName, Double.NaN);
+            if (!Double.isNaN(endgameOPREach)) {
+                double totalClimbPoints = 0;
+                for (BlueAllianceAPI.IndividualTeamInfo E : scoresByTeam.get(teamName)) {
+                    totalClimbPoints += E.getClimbPoints();
+                }
+                hangOprAdjusted.put(teamName, endgameOPREach - totalClimbPoints / scoresByTeam.get(teamName).size());
+
+            }
+        }
+
+        return hangOprAdjusted;
+    }
+
 }
