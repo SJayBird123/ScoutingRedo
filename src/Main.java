@@ -40,9 +40,14 @@ public class Main {
             Map<Integer, Double> hangOprAdjusted = new HashMap<Integer, Double>();
 
 
-            System.out.println("OPR");
             System.out.println(OPR);
-            System.out.println(teamNames);
+            System.out.println(autoOPR);
+            System.out.println(teleopOPR);
+            System.out.println(endgameOPR);
+            System.out.println(DPR);
+            System.out.println(penaltyDPR);
+            System.out.println(highOpr);
+            System.out.println(lowOpr);
 
         }catch(Exception e){
 
