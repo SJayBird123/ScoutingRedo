@@ -130,16 +130,16 @@ public class ExcelBuilder {
                                 currentTeamEndgames.endGameTotals.get("Mid") * 6 +
                                 currentTeamEndgames.endGameTotals.get("High") * 10 +
                                 currentTeamEndgames.endGameTotals.get("Traversal") * 15.0) /
-                                (endgamesTotal) * 100
-                ) / 100.0;
+                                (endgamesTotal) * 10
+                ) / 10.0;
 
-                row.createCell(0).setCellValue(teamKey);
-                row.createCell(1).setCellValue(currentTeamEndgames.endGameTotals.get("None"));
-                row.createCell(2).setCellValue(currentTeamEndgames.endGameTotals.get("Low"));
-                row.createCell(3).setCellValue(currentTeamEndgames.endGameTotals.get("Mid"));
-                row.createCell(4).setCellValue(currentTeamEndgames.endGameTotals.get("High"));
-                row.createCell(5).setCellValue(currentTeamEndgames.endGameTotals.get("Traversal"));
-                row.createCell(6).setCellValue(averageHangScore);
+                row.createCell(OPRs.length).setCellValue(teamKey);
+                row.createCell(OPRs.length+1).setCellValue(currentTeamEndgames.endGameTotals.get("None"));
+                row.createCell(OPRs.length+2).setCellValue(currentTeamEndgames.endGameTotals.get("Low"));
+                row.createCell(OPRs.length+3).setCellValue(currentTeamEndgames.endGameTotals.get("Mid"));
+                row.createCell(OPRs.length+4).setCellValue(currentTeamEndgames.endGameTotals.get("High"));
+                row.createCell(OPRs.length+5).setCellValue(currentTeamEndgames.endGameTotals.get("Traversal"));
+                row.createCell(OPRs.length+6).setCellValue(averageHangScore);
             }
         }
 
