@@ -2,7 +2,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +22,11 @@ public class ExcelBuilder {
     }
 
 
-    public XSSFWorkbook build() throws IOException {
+    public XSSFWorkbook build() {
         XSSFWorkbook workbook = new XSSFWorkbook();
-/*
+
         XSSFSheet summarySheet = workbook.createSheet("Summary");
-        summarySheet(summarySheet);
+        summarySheet(summarySheet,workbook);
 /*
         for (int teamname : this.teamNames) {
             XSSFSheet sheet = workbook.createSheet(Integer.toString(teamname));
@@ -77,9 +76,11 @@ public class ExcelBuilder {
 */
 
         return workbook;
+
     }
 
-    void summarySheet(XSSFSheet sheet) {
+    private void summarySheet(XSSFSheet sheet, XSSFWorkbook workbook) {
+
         {
             Row row = sheet.createRow(0);
 
@@ -101,6 +102,7 @@ public class ExcelBuilder {
             row.createCell(13).setCellValue("Mid #");
             row.createCell(14).setCellValue("High #");
             row.createCell(15).setCellValue("Traversal #");
+
         }
 
         int rowNum = 1;
@@ -108,10 +110,12 @@ public class ExcelBuilder {
         for (int teamKey : teamNames) {
             Row row = sheet.createRow(rowNum++);
 
+            row.createCell(0).setCellValue(teamKey);
+
             for(int i =0; i<OPRs.length;i++){
                 double opr = OPRs[i].getOrDefault(teamKey, Double.NaN);
                 if(!Double.isNaN(opr))
-                    row.createCell(i).setCellValue(Math.round(10*opr)/10.0);
+                    row.createCell(i+1).setCellValue(Math.round(100*opr)/100.0);
             }
 
             {
@@ -131,27 +135,32 @@ public class ExcelBuilder {
                                 currentTeamEndgames.endGameTotals.get("Mid") * 6 +
                                 currentTeamEndgames.endGameTotals.get("High") * 10 +
                                 currentTeamEndgames.endGameTotals.get("Traversal") * 15.0) /
-                                (endgamesTotal) * 10
-                ) / 10.0;
+                                (endgamesTotal) * 100
+                ) / 100.0;
 
-                row.createCell(OPRs.length).setCellValue(teamKey);
-                row.createCell(OPRs.length+1).setCellValue(currentTeamEndgames.endGameTotals.get("None"));
-                row.createCell(OPRs.length+2).setCellValue(currentTeamEndgames.endGameTotals.get("Low"));
-                row.createCell(OPRs.length+3).setCellValue(currentTeamEndgames.endGameTotals.get("Mid"));
-                row.createCell(OPRs.length+4).setCellValue(currentTeamEndgames.endGameTotals.get("High"));
-                row.createCell(OPRs.length+5).setCellValue(currentTeamEndgames.endGameTotals.get("Traversal"));
-                row.createCell(OPRs.length+6).setCellValue(averageHangScore);
+                row.createCell(OPRs.length+1).setCellValue(averageHangScore);
+                row.createCell(OPRs.length+2).setCellValue(currentTeamEndgames.endGameTotals.get("None"));
+                row.createCell(OPRs.length+3).setCellValue(currentTeamEndgames.endGameTotals.get("Low"));
+                row.createCell(OPRs.length+4).setCellValue(currentTeamEndgames.endGameTotals.get("Mid"));
+                row.createCell(OPRs.length+5).setCellValue(currentTeamEndgames.endGameTotals.get("High"));
+                row.createCell(OPRs.length+6).setCellValue(currentTeamEndgames.endGameTotals.get("Traversal"));
             }
         }
 
+        summarySheetStyling(sheet, workbook);
+    }
 
+    void summarySheetStyling(XSSFSheet sheet, XSSFWorkbook workbook){
+        for(int i =0; i<sheet.getRow(0).getHeight();i++){
+            sheet.autoSizeColumn(i);
+        }
     }
 
 }
 
 class endGames {
     int teamName;
-    LinkedHashMap<String, Integer> endGameTotals = new LinkedHashMap<String, Integer>();
+    LinkedHashMap<String, Integer> endGameTotals = new LinkedHashMap<>();
 
     endGames(int teamName) {
         this.teamName = teamName;

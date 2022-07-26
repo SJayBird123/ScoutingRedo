@@ -10,9 +10,13 @@
     <orderEntry type="library" name="json-simple-1.1.1" level="project" />
     <orderEntry type="library" name="jmat.core-1.1.0" level="project" />
     <orderEntry type="library" name="Jama-1.0.3" level="project" />
-    <orderEntry type="library" name="Jama-1.0.3 (2)" level="project" />
     <orderEntry type="library" name="poi-5.2.0" level="project" />
     <orderEntry type="library" name="poi-ooxml-5.2.0" level="project" />
     <orderEntry type="library" name="poi-ooxml-full-5.2.0" level="project" />
+    <orderEntry type="library" name="xmlbeans-5.0.3" level="project" />
+    <orderEntry type="library" name="commons-io-2.11.0" level="project" />
+    <orderEntry type="library" name="commons-collections4-4.4" level="project" />
+    <orderEntry type="library" name="log4j-api-2.17.1" level="project" />
+    <orderEntry type="library" name="commons-compress-1.21" level="project" />
   </component>
 </module>
