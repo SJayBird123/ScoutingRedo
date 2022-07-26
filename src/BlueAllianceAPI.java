@@ -128,24 +128,26 @@ public class BlueAllianceAPI {
 
 
         alliance.teams = new ArrayList<>();
-        alliance.autoCargoScore = ((Number) scoreBreakdownByAlliance.get("autoCargoPoints")).intValue();
         alliance.autoScore = ((Number) scoreBreakdownByAlliance.get("autoPoints")).intValue();
         alliance.endgamePoints = ((Number) scoreBreakdownByAlliance.get("endgamePoints")).intValue();
         alliance.foulPoints = ((Number) scoreBreakdownByAlliance.get("foulPoints")).intValue();
         alliance.matchNumber = ((Number) rawMatch.get("match_number")).intValue();
         alliance.score = ((Number) scoreBreakdownByAlliance.get("totalPoints")).intValue();
-        alliance.teleopCargoLower =
-                ((Number) scoreBreakdownByAlliance.get("teleopCargoLowerBlue")).intValue() +
-                        ((Number) scoreBreakdownByAlliance.get("teleopCargoLowerFar")).intValue() +
-                        ((Number) scoreBreakdownByAlliance.get("teleopCargoLowerNear")).intValue() +
-                        ((Number) scoreBreakdownByAlliance.get("teleopCargoLowerRed")).intValue();
-        alliance.teleopCargoUpper =
-                ((Number) scoreBreakdownByAlliance.get("teleopCargoUpperBlue")).intValue() +
-                        ((Number) scoreBreakdownByAlliance.get("teleopCargoUpperFar")).intValue() +
-                        ((Number) scoreBreakdownByAlliance.get("teleopCargoUpperNear")).intValue() +
-                        ((Number) scoreBreakdownByAlliance.get("teleopCargoUpperRed")).intValue();
-        alliance.teleopPoints = ((Number) scoreBreakdownByAlliance.get("teleopPoints")).intValue();
 
+        if(year == currentYear) {
+            alliance.teleopCargoLower =
+                    ((Number) scoreBreakdownByAlliance.get("teleopCargoLowerBlue")).intValue() +
+                            ((Number) scoreBreakdownByAlliance.get("teleopCargoLowerFar")).intValue() +
+                            ((Number) scoreBreakdownByAlliance.get("teleopCargoLowerNear")).intValue() +
+                            ((Number) scoreBreakdownByAlliance.get("teleopCargoLowerRed")).intValue();
+            alliance.teleopCargoUpper =
+                    ((Number) scoreBreakdownByAlliance.get("teleopCargoUpperBlue")).intValue() +
+                            ((Number) scoreBreakdownByAlliance.get("teleopCargoUpperFar")).intValue() +
+                            ((Number) scoreBreakdownByAlliance.get("teleopCargoUpperNear")).intValue() +
+                            ((Number) scoreBreakdownByAlliance.get("teleopCargoUpperRed")).intValue();
+            alliance.teleopPoints = ((Number) scoreBreakdownByAlliance.get("teleopPoints")).intValue();
+            alliance.autoCargoScore = ((Number) scoreBreakdownByAlliance.get("autoCargoPoints")).intValue();
+        }
 
         for(int i = 1; i<=3;i++){
             String team = (String) teamKeys.get(i-1);
@@ -155,9 +157,10 @@ public class BlueAllianceAPI {
             teamScore.robotNumber = "Robot "+i;
             teamScore.matchNumber = ((Number) rawMatch.get("match_number")).intValue();
 
-            //Year Specific
-            teamScore.taxi = (String) scoreBreakdownByAlliance.get("taxiRobot"+i);
-            teamScore.endgame = (String) scoreBreakdownByAlliance.get("endgameRobot"+i);
+            if(year == currentYear) {
+                teamScore.taxi = (String) scoreBreakdownByAlliance.get("taxiRobot" + i);
+                teamScore.endgame = (String) scoreBreakdownByAlliance.get("endgameRobot" + i);
+            }
             alliance.teams.add(teamScore);
         }
 
@@ -181,11 +184,12 @@ public class BlueAllianceAPI {
     public List<Integer> getTeamNames(String eventId,List<BlueAllianceAPI.Match> matches) throws Exception {
         List<Integer> teamNames= new ArrayList<>();
 
-        for( BlueAllianceAPI.Match match : matches){
+        for(BlueAllianceAPI.Match match : matches){
             List<IndividualTeamInfo> resultsRaw = match.getAllBreakdowns();
             for(IndividualTeamInfo teamInfo : resultsRaw){
                 int teamName = teamInfo.teamId;
                 boolean isIn = false;
+
 
                 for(Integer E: teamNames){
                     if(E == teamName){
@@ -194,8 +198,9 @@ public class BlueAllianceAPI {
                     }
                 }
 
-                if(!isIn || teamNames.size()==0)
+                if(!isIn || teamNames.size()==0) {
                     teamNames.add(teamName);
+                }
             }
         }
 

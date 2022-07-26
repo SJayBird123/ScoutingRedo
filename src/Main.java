@@ -46,23 +46,39 @@ public class Main {
                 }
             }
 
-            Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints);
-            Map<Integer, Double> autoOPR = calc.calculateOPR(alliance -> alliance.autoScore);
-            Map<Integer, Double> teleopOPR = calc.calculateOPR(alliance -> alliance.teleopPoints);
-            Map<Integer, Double> endgameOPR = calc.calculateOPR(alliance -> alliance.endgamePoints);
-            Map<Integer, Double> DPR = calc.calculateDPR(alliance -> alliance.score - alliance.foulPoints);
-            Map<Integer, Double> penaltyDPR = calc.calculateDPR(alliance -> alliance.foulPoints);
+            Map<String, Double>[] OPRs;
+            if(year ==currentYear) {
 
-            Map<Integer, Double> highOpr = calc.calculateOPR(alliance -> alliance.teleopCargoUpper);
-            Map<Integer, Double> lowOpr = calc.calculateOPR(alliance -> alliance.teleopCargoLower);
-            Map<Integer, Double> hangOprAdjusted = calc.hangOPRAdjustedCalc(endgameOPR,scoresByTeam);
+                Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints);
+                Map<Integer, Double> autoOPR = calc.calculateOPR(alliance -> alliance.autoScore);
+                Map<Integer, Double> teleopOPR = calc.calculateOPR(alliance -> alliance.teleopPoints);
+                Map<Integer, Double> endgameOPR = calc.calculateOPR(alliance -> alliance.endgamePoints);
+                Map<Integer, Double> DPR = calc.calculateDPR(alliance -> alliance.score - alliance.foulPoints);
+                Map<Integer, Double> penaltyDPR = calc.calculateDPR(alliance -> alliance.foulPoints);
 
-            Map<String, Double>[] OPRs = new Map[] {
-                    OPR, autoOPR, teleopOPR, endgameOPR, DPR, penaltyDPR, lowOpr, highOpr, hangOprAdjusted
-            };
+                Map<Integer, Double> highOpr = calc.calculateOPR(alliance -> alliance.teleopCargoUpper);
+                Map<Integer, Double> lowOpr = calc.calculateOPR(alliance -> alliance.teleopCargoLower);
+                Map<Integer, Double> hangOprAdjusted = calc.hangOPRAdjustedCalc(endgameOPR, scoresByTeam);
+
+                OPRs = new Map[]{
+                        OPR, autoOPR, teleopOPR, endgameOPR, DPR, penaltyDPR, lowOpr, highOpr, hangOprAdjusted
+                };
+            }else{
+
+                Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints);
+                Map<Integer, Double> autoOPR = calc.calculateOPR(alliance -> alliance.autoScore);
+                Map<Integer, Double> teleopOPR = calc.calculateOPR(alliance -> alliance.teleopPoints);
+                Map<Integer, Double> endgameOPR = calc.calculateOPR(alliance -> alliance.endgamePoints);
+                Map<Integer, Double> DPR = calc.calculateDPR(alliance -> alliance.score - alliance.foulPoints);
+                Map<Integer, Double> penaltyDPR = calc.calculateDPR(alliance -> alliance.foulPoints);
+
+                OPRs = new Map[]{
+                        OPR, autoOPR, teleopOPR, endgameOPR, DPR, penaltyDPR
+                };
+            }
 
 
-            ExcelBuilder ExcelBuilder = new ExcelBuilder(OPRs, teamNames, scoresByTeam, matches);
+            ExcelBuilder ExcelBuilder = new ExcelBuilder(OPRs, teamNames, scoresByTeam, matches, year, currentYear);
             XSSFWorkbook workbook = ExcelBuilder.build();
             File saveFile = UI.compileFile(selectedEventKey);
 

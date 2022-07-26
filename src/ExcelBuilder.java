@@ -10,14 +10,18 @@ public class ExcelBuilder {
     List<Integer> teamNames;
     List<BlueAllianceAPI.Match> matches;
     Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam;
+    int year;
+    int currentYear;
 
     public ExcelBuilder(Map<String, Double>[] OPRs, List<Integer> teamNames,
                         Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam,
-                        List<BlueAllianceAPI.Match> matches) {
+                        List<BlueAllianceAPI.Match> matches, int year, int currentYear) {
         this.OPRs = OPRs;
         this.teamNames = teamNames;
         this.matches = matches;
         this.scoresByTeam = scoresByTeam;
+        this.year = year;
+        this.currentYear = currentYear;
     }
 
 
@@ -91,17 +95,18 @@ public class ExcelBuilder {
             row.createCell(5).setCellValue("DPR");
             row.createCell(6).setCellValue("penalty DPR");
 
-            row.createCell(7).setCellValue("Low OPR");
-            row.createCell(8).setCellValue("High OPR");
-            row.createCell(9).setCellValue("Endgame OPR (adjusted)");
+            if(year == currentYear) {
+                row.createCell(7).setCellValue("Low OPR");
+                row.createCell(8).setCellValue("High OPR");
+                row.createCell(9).setCellValue("Endgame OPR (adjusted)");
 
-            row.createCell(10).setCellValue("Average Hang");
-            row.createCell(11).setCellValue("None #");
-            row.createCell(12).setCellValue("Low #");
-            row.createCell(13).setCellValue("Mid #");
-            row.createCell(14).setCellValue("High #");
-            row.createCell(15).setCellValue("Traversal #");
-
+                row.createCell(10).setCellValue("Average Hang");
+                row.createCell(11).setCellValue("None #");
+                row.createCell(12).setCellValue("Low #");
+                row.createCell(13).setCellValue("Mid #");
+                row.createCell(14).setCellValue("High #");
+                row.createCell(15).setCellValue("Traversal #");
+            }
         }
 
         int rowNum = 1;
@@ -117,7 +122,7 @@ public class ExcelBuilder {
                     row.createCell(i+1).setCellValue(Math.round(10*opr)/10.0);
             }
 
-            {
+            if(year == currentYear){
                 endGames currentTeamEndgames = new endGames(teamKey);
 
                 for (BlueAllianceAPI.IndividualTeamInfo score : scoresByTeam.get(teamKey)) {
