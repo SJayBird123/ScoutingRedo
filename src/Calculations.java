@@ -1,5 +1,4 @@
 import Jama.Matrix;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,19 +125,19 @@ public class Calculations {
 
     }
 
-    public HashMap<Integer, Double> hangOPRAdjustedCalc(Map<Integer, Double> endgameOPRAll,
+    public HashMap<Integer, Double> hangOPRAdjustedCalc(Map<Integer, Double> endgameOPRall,
         Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam){
 
         HashMap<Integer, Double> hangOprAdjusted = new HashMap<Integer, Double>();
 
         for (int teamName : teamNames) {
-            double endgameOPREach = endgameOPRAll.getOrDefault(teamName, Double.NaN);
-            if (!Double.isNaN(endgameOPREach)) {
+            double endgameOPReach = endgameOPRall.getOrDefault(teamName, Double.NaN);
+            if (!Double.isNaN(endgameOPReach)) {
                 double totalClimbPoints = 0;
                 for (BlueAllianceAPI.IndividualTeamInfo E : scoresByTeam.get(teamName)) {
                     totalClimbPoints += E.getClimbPoints();
                 }
-                hangOprAdjusted.put(teamName, endgameOPREach - totalClimbPoints / scoresByTeam.get(teamName).size());
+                hangOprAdjusted.put(teamName, endgameOPReach - totalClimbPoints / scoresByTeam.get(teamName).size());
 
             }
         }

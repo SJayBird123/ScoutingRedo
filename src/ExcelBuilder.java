@@ -1,7 +1,6 @@
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +114,7 @@ public class ExcelBuilder {
             for(int i =0; i<OPRs.length;i++){
                 double opr = OPRs[i].getOrDefault(teamKey, Double.NaN);
                 if(!Double.isNaN(opr))
-                    row.createCell(i+1).setCellValue(Math.round(100*opr)/100.0);
+                    row.createCell(i+1).setCellValue(Math.round(10*opr)/10.0);
             }
 
             {
@@ -135,8 +134,8 @@ public class ExcelBuilder {
                                 currentTeamEndgames.endGameTotals.get("Mid") * 6 +
                                 currentTeamEndgames.endGameTotals.get("High") * 10 +
                                 currentTeamEndgames.endGameTotals.get("Traversal") * 15.0) /
-                                (endgamesTotal) * 100
-                ) / 100.0;
+                                (endgamesTotal) * 10
+                ) / 10.0;
 
                 row.createCell(OPRs.length+1).setCellValue(averageHangScore);
                 row.createCell(OPRs.length+2).setCellValue(currentTeamEndgames.endGameTotals.get("None"));

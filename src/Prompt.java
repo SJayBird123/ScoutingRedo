@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -39,5 +41,22 @@ public class Prompt {
         }
 
         return null;
+    }
+
+    public File compileFile(String selectedEventKey){
+        JFrame parentFrame = new JFrame();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save File");
+
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("spreadsheet", "xlsx"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("spreadsheet", "xlsx"));
+        fileChooser.setSelectedFile(new File("matches_" + selectedEventKey + ".xlsx"));
+
+        if (fileChooser.showSaveDialog(parentFrame) != JFileChooser.APPROVE_OPTION) {
+            System.err.println("You fool");
+            System.exit(-10);
+        }
+
+        return fileChooser.getSelectedFile();
     }
 }

@@ -1,7 +1,4 @@
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.*;
@@ -32,8 +29,8 @@ public class Main {
 
 
             Calculations calc = new Calculations(matches,teamNames);
+            Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam = new HashMap<>();
 
-            Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam = new HashMap<Integer, List<BlueAllianceAPI.IndividualTeamInfo>>();
             // go through each match
             for(BlueAllianceAPI.Match match : matches){
                 // go though each robot-specific score in the match
@@ -54,7 +51,7 @@ public class Main {
             Map<Integer, Double> teleopOPR = calc.calculateOPR(alliance -> alliance.teleopPoints);
             Map<Integer, Double> endgameOPR = calc.calculateOPR(alliance -> alliance.endgamePoints);
             Map<Integer, Double> DPR = calc.calculateDPR(alliance -> alliance.score - alliance.foulPoints);
-            Map<Integer, Double> penaltyDPR = calc.calculateOPR(alliance -> alliance.foulPoints);
+            Map<Integer, Double> penaltyDPR = calc.calculateDPR(alliance -> alliance.foulPoints);
 
             Map<Integer, Double> highOpr = calc.calculateOPR(alliance -> alliance.teleopCargoUpper);
             Map<Integer, Double> lowOpr = calc.calculateOPR(alliance -> alliance.teleopCargoLower);
@@ -67,28 +64,7 @@ public class Main {
 
             ExcelBuilder ExcelBuilder = new ExcelBuilder(OPRs, teamNames, scoresByTeam, matches);
             XSSFWorkbook workbook = ExcelBuilder.build();
-
-
-
-
-            File saveFile;
-            if (args.length >= 2) {
-                saveFile = new File(args[2]);
-            } else {
-                // UI to select file
-                JFrame parentFrame = new JFrame();
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Save File");
-
-                fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("spreadsheet", "xlsx"));
-                fileChooser.setFileFilter(new FileNameExtensionFilter("spreadsheet", "xlsx"));
-                fileChooser.setSelectedFile(new File("matches_" + selectedEventKey + ".xlsx"));
-                if (fileChooser.showSaveDialog(parentFrame) != JFileChooser.APPROVE_OPTION) {
-                    System.err.println("You fool");
-                    System.exit(-10);
-                }
-                saveFile = fileChooser.getSelectedFile();
-            }
+            File saveFile = UI.compileFile(selectedEventKey);
 
             // Save workbook to file
             try (FileOutputStream outputStream = new FileOutputStream(saveFile)) {
@@ -96,13 +72,6 @@ public class Main {
             }
 
             System.exit(0);
-
-
-
-
-
-
-
 
         }catch(Exception e){
 
