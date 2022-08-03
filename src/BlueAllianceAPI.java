@@ -71,7 +71,7 @@ public class BlueAllianceAPI {
     }
 
     public LinkedHashMap<String, String> returnAllEvents(String country) throws Exception {
-        JSONArray eventsRaw = apiCall("events/" + year + "/simple");
+        JSONArray eventsRaw = apiCall("events/" + year);
         LinkedHashMap<String, String> events = new LinkedHashMap<>();
 
         for (Object objMatch: eventsRaw) {
@@ -80,6 +80,11 @@ public class BlueAllianceAPI {
             if (!country.equals(eventRawSpecific.get("country"))) {
                 continue;
             }
+//
+//            if(eventRawSpecific.get("playoff_type") == null){
+//                continue;
+//            }
+
             events.put((String) eventRawSpecific.get("key"),(String) eventRawSpecific.get("name"));
         }
 
