@@ -117,7 +117,7 @@ public class Calculations {
     public HashMap<Integer, Double> hangOPRAdjustedCalc(Map<Integer, Double> endgameOPRall,
         Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam){
 
-        HashMap<Integer, Double> hangOprAdjusted = new HashMap<Integer, Double>();
+        HashMap<Integer, Double> hangOprAdjusted = new HashMap<>();
 
         for (int teamName : teamNames) {
             double endgameOPReach = endgameOPRall.getOrDefault(teamName, Double.NaN);

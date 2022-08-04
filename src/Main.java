@@ -87,8 +87,13 @@ public class Main {
                 workbook.write(outputStream);
             }
 
-            System.exit(0);
+            int confirmation = UI.reRun();
+            if(confirmation == JOptionPane.YES_OPTION){
+                String[] E = new String[0];
+                main(E);
+            }
 
+            System.exit(0);
         }catch (Throwable t) {
             StringWriter errors = new StringWriter();
             t.printStackTrace(new PrintWriter(errors));

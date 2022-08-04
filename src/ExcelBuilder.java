@@ -31,7 +31,7 @@ public class ExcelBuilder {
         XSSFWorkbook workbook = new XSSFWorkbook();
 
         XSSFSheet summarySheet = workbook.createSheet("Summary");
-        summarySheet(summarySheet,workbook);
+        summarySheet(summarySheet);
 
         if(year == currentYear){
             for (int teamName : this.teamNames) {
@@ -43,7 +43,7 @@ public class ExcelBuilder {
     }
 
 
-    private void summarySheet(XSSFSheet sheet, XSSFWorkbook workbook) {
+    private void summarySheet(XSSFSheet sheet) {
 
         {
             Row row = sheet.createRow(0);
@@ -112,10 +112,10 @@ public class ExcelBuilder {
             }
         }
 
-        summarySheetStyling(sheet, workbook);
+        summarySheetStyling(sheet);
     }
 
-    void summarySheetStyling(XSSFSheet sheet, XSSFWorkbook workbook){
+    void summarySheetStyling(XSSFSheet sheet){
         for(int i =0; i<sheet.getRow(0).getHeight();i++){
             sheet.autoSizeColumn(i);
         }
@@ -151,10 +151,10 @@ public class ExcelBuilder {
             row.createCell(3).setCellValue(match.robotNumber);
         }
 
-        teamSheetStyling(sheet, workbook);
+        teamSheetStyling(sheet);
     }
 
-    void teamSheetStyling(XSSFSheet sheet, XSSFWorkbook workbook){
+    void teamSheetStyling(XSSFSheet sheet){
         for(int i =0; i<sheet.getRow(0).getHeight();i++){
             sheet.autoSizeColumn(i);
         }

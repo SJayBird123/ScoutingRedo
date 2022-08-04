@@ -8,8 +8,8 @@ import java.util.LinkedHashMap;
 public class Prompt {
 
     public int selectYear(){
-        /*Integer[] yearArray = {2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007,
-        2006, 2005, 2004, 2003, 2002, 2001, 2000, 1999, 1998, 1997, 1996, 1995, 1994, 1993, 1992};*/
+//        Integer[] yearArray = {2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007,
+//        2006, 2005, 2004, 2003, 2002, 2001, 2000, 1999, 1998, 1997, 1996, 1995, 1994, 1993, 1992};
         Integer[] yearArray = {2022,2021,2020,2019,2018};
 
         return (int) JOptionPane.showInputDialog(null, "Pick year", "Pick year",
@@ -24,7 +24,7 @@ public class Prompt {
     }
 
     public String selectEvent(LinkedHashMap<String, String> events){
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
 
         for (String key : events.keySet()) {
             names.add(events.get(key));
@@ -37,7 +37,7 @@ public class Prompt {
                 JOptionPane.QUESTION_MESSAGE, null, eventNames, "USA");
 
         for (String key : events.keySet()) {
-            if(events.get(key) == selectedName)
+            if(events.get(key).equals(selectedName))
                 return key;
         }
 
@@ -59,5 +59,9 @@ public class Prompt {
         }
 
         return fileChooser.getSelectedFile();
+    }
+
+    public int reRun (){
+        return JOptionPane.showConfirmDialog(null,"Do you want to scout another event?");
     }
 }
