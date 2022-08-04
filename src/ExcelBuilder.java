@@ -1,9 +1,12 @@
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ExcelBuilder {
     Map<String, Double>[] OPRs;
@@ -24,63 +27,21 @@ public class ExcelBuilder {
         this.currentYear = currentYear;
     }
 
-
     public XSSFWorkbook build() {
         XSSFWorkbook workbook = new XSSFWorkbook();
 
         XSSFSheet summarySheet = workbook.createSheet("Summary");
         summarySheet(summarySheet,workbook);
-/*
-        for (int teamname : this.teamNames) {
-            XSSFSheet sheet = workbook.createSheet(Integer.toString(teamname));
-            List<BlueAllianceAPI.IndividualTeamInfo> teamMatches = scoresByTeam.get(teamname);
-            teamMatches = teamMatches
-                    .stream()
-                    .sorted(Comparator.comparingInt(match -> match.matchNumber))
-                    .collect(Collectors.toList());
-            // Add header
-            int rowNum = 0;
-            {
-                Row header = sheet.createRow(rowNum++);
-                XSSFFont bold = workbook.createFont();
-                bold.setBold(true);
-                CellStyle style = workbook.createCellStyle();
-                style.setFont(bold);
-                header.setRowStyle(style);
 
-                Cell cell1 = header.createCell(0);
-                cell1.setCellValue("Match #");
-
-                Cell cell2 = header.createCell(1);
-                cell2.setCellValue("Taxi");
-
-                Cell cell3 = header.createCell(2);
-                cell3.setCellValue("Endgame");
-
-                Cell cell4 = header.createCell(3);
-                cell4.setCellValue("Robot #");
-
-            }
-
-            for (BlueAllianceAPI.IndividualTeamInfo match : teamMatches) {
-                Row row = sheet.createRow(rowNum);
-                rowNum++;
-
-                Cell matchNumberCell = row.createCell(0);
-                matchNumberCell.setCellValue(match.matchNumber);
-                Cell taxiCell = row.createCell(1);
-                taxiCell.setCellValue(match.taxi);
-                Cell endgameCell = row.createCell(2);
-                endgameCell.setCellValue(match.endgame);
-                Cell robotNumberCell = row.createCell(3);
-                robotNumberCell.setCellValue(match.robotNumber);
+        if(year == currentYear){
+            for (int teamName : this.teamNames) {
+                teamSheet(teamName,workbook);
             }
         }
-*/
 
         return workbook;
-
     }
+
 
     private void summarySheet(XSSFSheet sheet, XSSFWorkbook workbook) {
 
@@ -98,7 +59,7 @@ public class ExcelBuilder {
             if(year == currentYear) {
                 row.createCell(7).setCellValue("Low OPR");
                 row.createCell(8).setCellValue("High OPR");
-                row.createCell(9).setCellValue("Endgame OPR (adjusted)");
+                row.createCell(9).setCellValue("Endgame OPR (hang adjusted)");
 
                 row.createCell(10).setCellValue("Average Hang");
                 row.createCell(11).setCellValue("None #");
@@ -155,6 +116,41 @@ public class ExcelBuilder {
     }
 
     void summarySheetStyling(XSSFSheet sheet, XSSFWorkbook workbook){
+        for(int i =0; i<sheet.getRow(0).getHeight();i++){
+            sheet.autoSizeColumn(i);
+        }
+    }
+
+    private void teamSheet(int teamName, XSSFWorkbook workbook){
+        XSSFSheet sheet = workbook.createSheet(Integer.toString(teamName));
+        List<BlueAllianceAPI.IndividualTeamInfo> teamMatches = scoresByTeam.get(teamName);
+
+        teamMatches = teamMatches
+                .stream()
+                .sorted(Comparator.comparingInt(match -> match.matchNumber))
+                .collect(Collectors.toList());
+
+        // Add header
+        int rowNum = 0;
+        {
+            Row header = sheet.createRow(rowNum++);
+
+            header.createCell(0).setCellValue("Match #");
+            header.createCell(1).setCellValue("Taxi");
+            header.createCell(2).setCellValue("Endgame");
+            header.createCell(3).setCellValue("Robot #");
+        }
+
+        for (BlueAllianceAPI.IndividualTeamInfo match : teamMatches) {
+            Row row = sheet.createRow(rowNum);
+            rowNum++;
+
+            row.createCell(0).setCellValue(match.matchNumber);
+            row.createCell(1).setCellValue(match.taxi);
+            row.createCell(2).setCellValue(match.endgame);
+            row.createCell(3).setCellValue(match.robotNumber);
+        }
+
         for(int i =0; i<sheet.getRow(0).getHeight();i++){
             sheet.autoSizeColumn(i);
         }
