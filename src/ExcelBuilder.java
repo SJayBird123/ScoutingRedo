@@ -151,6 +151,10 @@ public class ExcelBuilder {
             row.createCell(3).setCellValue(match.robotNumber);
         }
 
+        teamSheetStyling(sheet, workbook);
+    }
+
+    void teamSheetStyling(XSSFSheet sheet, XSSFWorkbook workbook){
         for(int i =0; i<sheet.getRow(0).getHeight();i++){
             sheet.autoSizeColumn(i);
         }
