@@ -25,7 +25,7 @@ public class Main {
             System.out.println(selectedEventKey);
 
             List<BlueAllianceAPI.Match> matches = API.getMatchBreakdowns(selectedEventKey);
-            List<Integer> teamNames = API.getTeamNames(selectedEventKey, matches);
+            List<Integer> teamNames = API.getTeamNames(matches);
 
 
             Calculations calc = new Calculations(matches,teamNames);
@@ -48,7 +48,6 @@ public class Main {
 
             Map<String, Double>[] OPRs;
             if(year ==currentYear) {
-
                 Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints);
                 Map<Integer, Double> autoOPR = calc.calculateOPR(alliance -> alliance.autoScore);
                 Map<Integer, Double> teleopOPR = calc.calculateOPR(alliance -> alliance.teleopPoints);
@@ -64,7 +63,6 @@ public class Main {
                         OPR, autoOPR, teleopOPR, endgameOPR, DPR, penaltyDPR, lowOpr, highOpr, hangOprAdjusted
                 };
             }else{
-
                 Map<Integer, Double> OPR = calc.calculateOPR(alliance -> alliance.score - alliance.foulPoints);
                 Map<Integer, Double> autoOPR = calc.calculateOPR(alliance -> alliance.autoScore);
                 Map<Integer, Double> teleopOPR = calc.calculateOPR(alliance -> alliance.teleopPoints);
@@ -76,7 +74,6 @@ public class Main {
                         OPR, autoOPR, teleopOPR, endgameOPR, DPR, penaltyDPR
                 };
             }
-
 
             ExcelBuilder ExcelBuilder = new ExcelBuilder(OPRs, teamNames, scoresByTeam, matches, year, currentYear);
             XSSFWorkbook workbook = ExcelBuilder.build();

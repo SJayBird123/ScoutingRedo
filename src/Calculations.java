@@ -16,9 +16,7 @@ public class Calculations {
     }
 
     public Map<Integer, Double> calculateOPR(ToIntFunction<BlueAllianceAPI.AllianceScore> extractScore) {
-
         System.out.println("calculating OPR for " + teamNames.size() + " teams, " + matches.size() + " matches");
-
 
         double[][] teamPresence = new double[matches.size() * 2][teamNames.size()];
         double[][] scores = new double[matches.size() * 2][1];
@@ -42,8 +40,6 @@ public class Calculations {
             }
         }
 
-
-
         try {
             Matrix A = new Matrix(teamPresence);
             Matrix b = new Matrix(scores);
@@ -52,7 +48,6 @@ public class Calculations {
             Matrix r = A.times(x).minus(b);
             double rnorm = r.normInf();
             System.out.println("OPR error: " + rnorm);
-
 
             Map<Integer, Double> oprMap = new HashMap<>();
             for (int i = 0; i < teamNames.size(); i++) {
@@ -67,13 +62,10 @@ public class Calculations {
             Map<Integer, Double> oprMap = new HashMap<>();
             return oprMap;
         }
-
     }
 
     public Map<Integer, Double> calculateDPR(ToIntFunction<BlueAllianceAPI.AllianceScore> extractScore) {
-
         System.out.println("calculating OPR for " + teamNames.size() + " teams, " + matches.size() + " matches");
-
 
         double[][] teamPresence = new double[matches.size() * 2][teamNames.size()];
         double[][] scores = new double[matches.size() * 2][1];
@@ -97,8 +89,6 @@ public class Calculations {
             }
         }
 
-
-
         try {
             Matrix A = new Matrix(teamPresence);
             Matrix b = new Matrix(scores);
@@ -107,7 +97,6 @@ public class Calculations {
             Matrix r = A.times(x).minus(b);
             double rnorm = r.normInf();
             System.out.println("OPR error: " + rnorm);
-
 
             Map<Integer, Double> oprMap = new HashMap<>();
             for (int i = 0; i < teamNames.size(); i++) {

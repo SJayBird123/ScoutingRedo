@@ -80,10 +80,20 @@ public class BlueAllianceAPI {
             if (!country.equals(eventRawSpecific.get("country"))) {
                 continue;
             }
-//
-//            if(eventRawSpecific.get("playoff_type") == null){
-//                continue;
-//            }
+
+            /*
+             *So there are a million FRC events that are not actual calculatable competitions like one off stuff
+             *or einstein field or covid events or a million other things. There is data for the type of event but none
+             *of it is consistent. Because of this I can't effectively sort out which events are poopoo without
+             *trying to run it and look for an error. I also have not spent much effort trying to solve this and maybe
+             * if I used a brain cell or 2 I could find a value to sort by but as of right now I don't care enough to
+             * fix it. (8-4-22)
+             * */
+//          For some reason events that are perfectly normal have playoff_types of null. !?!?!??!?!?!
+//          Also it won't let me compare the JSONobject to an Int no matter what I try, but I'm also dumb so ye
+//          if(eventRawSpecific.get("playoff_type") == null){
+//              continue;
+//          }
 
             events.put((String) eventRawSpecific.get("key"),(String) eventRawSpecific.get("name"));
         }
@@ -131,9 +141,9 @@ public class BlueAllianceAPI {
 
         AllianceScore alliance = new AllianceScore();
 
-
         alliance.teams = new ArrayList<>();
         alliance.autoScore = ((Number) scoreBreakdownByAlliance.get("autoPoints")).intValue();
+        alliance.teleopPoints = ((Number) scoreBreakdownByAlliance.get("teleopPoints")).intValue();
         alliance.endgamePoints = ((Number) scoreBreakdownByAlliance.get("endgamePoints")).intValue();
         alliance.foulPoints = ((Number) scoreBreakdownByAlliance.get("foulPoints")).intValue();
         alliance.matchNumber = ((Number) rawMatch.get("match_number")).intValue();
@@ -150,7 +160,6 @@ public class BlueAllianceAPI {
                             ((Number) scoreBreakdownByAlliance.get("teleopCargoUpperFar")).intValue() +
                             ((Number) scoreBreakdownByAlliance.get("teleopCargoUpperNear")).intValue() +
                             ((Number) scoreBreakdownByAlliance.get("teleopCargoUpperRed")).intValue();
-            alliance.teleopPoints = ((Number) scoreBreakdownByAlliance.get("teleopPoints")).intValue();
             alliance.autoCargoScore = ((Number) scoreBreakdownByAlliance.get("autoCargoPoints")).intValue();
         }
 
@@ -186,15 +195,15 @@ public class BlueAllianceAPI {
     }
     */
 
-    public List<Integer> getTeamNames(String eventId,List<BlueAllianceAPI.Match> matches) throws Exception {
+    public List<Integer> getTeamNames(List<BlueAllianceAPI.Match> matches) throws Exception {
         List<Integer> teamNames= new ArrayList<>();
 
         for(BlueAllianceAPI.Match match : matches){
             List<IndividualTeamInfo> resultsRaw = match.getAllBreakdowns();
+
             for(IndividualTeamInfo teamInfo : resultsRaw){
                 int teamName = teamInfo.teamId;
                 boolean isIn = false;
-
 
                 for(Integer E: teamNames){
                     if(E == teamName){
