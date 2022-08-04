@@ -1,6 +1,10 @@
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 public class Main {
@@ -11,7 +15,6 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         try {
-
             Prompt UI = new Prompt();
             year = UI.selectYear();
 
@@ -86,8 +89,11 @@ public class Main {
 
             System.exit(0);
 
-        }catch(Exception e){
-
+        }catch (Throwable t) {
+            StringWriter errors = new StringWriter();
+            t.printStackTrace(new PrintWriter(errors));
+            JOptionPane.showMessageDialog(null, errors.getBuffer().toString(), "An error occurred", JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
         }
         System.exit(0);
     }
