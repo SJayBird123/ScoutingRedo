@@ -4,18 +4,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.ToIntFunction;
 
-
+/**
+ * Class where bigger calculations occur. Seemed cleaner that way.
+ */
 public class Calculations {
 
+    /**
+     * All matches in a given event.
+     */
     List<BlueAllianceAPI.Match> matches;
+    /**
+     * All relevant team numbers.
+     */
     List<Integer> teamNames;
 
+    /**
+     * Sets all matches and team numbers
+     * @param matches  List of all Match objects for event.
+     * @param teamNames  List of all team numbers for event.
+     */
     public Calculations(List<BlueAllianceAPI.Match> matches, List<Integer> teamNames){
         this.matches = matches;
         this.teamNames = teamNames;
     }
 
-    public Map<Integer, Double> calculateOPR(ToIntFunction<BlueAllianceAPI.AllianceScore> extractScore) {
+    /**
+     * Calculates OPR for a given type of value
+     * @param extractScore All of a certain type of data from AllianceScore to calculate OPR for (includes team numbers).
+     * @return A Map of all team numbers and OPRs
+     */
+    public Map<Integer, Double> calculateOPR(ToIntFunction<BlueAllianceAPI.AllianceScore> extractScore)     {
         System.out.println("calculating OPR for " + teamNames.size() + " teams, " + matches.size() + " matches");
 
         double[][] teamPresence = new double[matches.size() * 2][teamNames.size()];
@@ -64,6 +82,11 @@ public class Calculations {
         }
     }
 
+    /**
+     * Calculates DPR for a given type of value
+     * @param extractScore All of a certain type of data from AllianceScore to calculate DPR for (includes team numbers).
+     * @return A Map of all team numbers and DPRs
+     */
     public Map<Integer, Double> calculateDPR(ToIntFunction<BlueAllianceAPI.AllianceScore> extractScore) {
         System.out.println("calculating OPR for " + teamNames.size() + " teams, " + matches.size() + " matches");
 
@@ -114,6 +137,12 @@ public class Calculations {
 
     }
 
+    /**
+     * Adjusts the Endgame OPR values for the teams own average hang contribution.
+     * @param endgameOPRall The unadjusted Endgame OPR for all teams.
+     * @param scoresByTeam All teams and all their corresponding IndividualTeamInfo objects across all matches.
+     * @return A HashMap of all team numbers and Adjusted OPRs
+     */
     public HashMap<Integer, Double> hangOPRAdjustedCalc(Map<Integer, Double> endgameOPRall,
         Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam){
 

@@ -8,14 +8,44 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Constructs the spreadsheet containing all the data.
+ */
 public class ExcelBuilder {
+    /**
+     * All OPR calculations and the corresponding teams
+     */
     Map<String, Double>[] OPRs;
+    /**
+     * List of all team numbers in order
+     */
     List<Integer> teamNames;
+    /**
+     * List of all Match objects for event
+     */
     List<BlueAllianceAPI.Match> matches;
+    /**
+     * All teams and all their corresponding IndividualTeamInfo objects across all matches
+     */
     Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam;
+    /**
+     * The year selected for scouting data.
+     */
     int year;
+    /**
+     * The current year.
+     */
     int currentYear;
 
+    /**
+     * Set all OPRs, team numbers, IndividualTeamInfo for all teams, matches, selected year, and current year
+     * @param OPRs All OPR calculations and the corresponding teams.
+     * @param teamNames List of all team numbers in order.
+     * @param scoresByTeam All teams and all their corresponding IndividualTeamInfo objects across all matches.
+     * @param matches List of all Match objects for event.
+     * @param year The year selected for scouting data.
+     * @param currentYear The current year.
+     */
     public ExcelBuilder(Map<String, Double>[] OPRs, List<Integer> teamNames,
                         Map<Integer, List<BlueAllianceAPI.IndividualTeamInfo>> scoresByTeam,
                         List<BlueAllianceAPI.Match> matches, int year, int currentYear) {
@@ -27,6 +57,10 @@ public class ExcelBuilder {
         this.currentYear = currentYear;
     }
 
+    /**
+     * Builds the Workbook containing all of the individual sheets. Calls methods that create summary and team sheets.
+     * @return XSSFWorkbook containing the spreadsheet.
+     */
     public XSSFWorkbook build() {
         XSSFWorkbook workbook = new XSSFWorkbook();
 
@@ -42,9 +76,12 @@ public class ExcelBuilder {
         return workbook;
     }
 
-
+    /**
+     * Creates the Summary sheet
+     * @param sheet The XSSFSheet being worked on.
+     */
     private void summarySheet(XSSFSheet sheet) {
-
+        //Sets the header
         {
             Row row = sheet.createRow(0);
 
@@ -72,12 +109,15 @@ public class ExcelBuilder {
 
         int rowNum = 1;
 
+        //For every team
         for (int teamKey : teamNames) {
+            //Create a new row with first cell being the team number
             Row row = sheet.createRow(rowNum++);
-
             row.createCell(0).setCellValue(teamKey);
 
+            //For every OPR type
             for(int i =0; i<OPRs.length;i++){
+                //Fill each cell with the OPR for the team to the tenths place
                 double opr = OPRs[i].getOrDefault(teamKey, Double.NaN);
                 if(!Double.isNaN(opr))
                     row.createCell(i+1).setCellValue(Math.round(10*opr)/10.0);
@@ -115,12 +155,22 @@ public class ExcelBuilder {
         summarySheetStyling(sheet);
     }
 
+    /**
+     * Adds styling to the summary sheet
+     * @param sheet The XSSFSheet being worked on.
+     */
     void summarySheetStyling(XSSFSheet sheet){
         for(int i =0; i<sheet.getRow(0).getHeight();i++){
+            //Resize all columns so they make sense
             sheet.autoSizeColumn(i);
         }
     }
 
+    /**
+     * Creates a sheet for the given team
+     * @param teamName The number of the team the sheet corresponds to
+     * @param workbook The workbook being operated in.
+     */
     private void teamSheet(int teamName, XSSFWorkbook workbook){
         XSSFSheet sheet = workbook.createSheet(Integer.toString(teamName));
         List<BlueAllianceAPI.IndividualTeamInfo> teamMatches = scoresByTeam.get(teamName);
@@ -154,6 +204,10 @@ public class ExcelBuilder {
         teamSheetStyling(sheet);
     }
 
+    /**
+     * Adds styling to the team sheet
+     * @param sheet The XSSFSheet being worked on.
+     */
     void teamSheetStyling(XSSFSheet sheet){
         for(int i =0; i<sheet.getRow(0).getHeight();i++){
             sheet.autoSizeColumn(i);
@@ -162,6 +216,9 @@ public class ExcelBuilder {
 
 }
 
+/**
+ * An object that records all hanging states (2022) for a given team.
+ */
 class endGames {
     int teamName;
     LinkedHashMap<String, Integer> endGameTotals = new LinkedHashMap<>();

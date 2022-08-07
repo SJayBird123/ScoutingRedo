@@ -9,9 +9,32 @@ import java.util.*;
 
 public class Main {
 
+    /**
+     * Key to access the API
+     */
     static String apiKey = "khASaff3i538qIxLZuxqC3g6dv55ZLHC8ztwsNfYPAHenKU6ymjwSfE8HqMvqNqL";
+    /**
+     * The year being scouted
+     */
     private static int year;
+    /**
+     * The current year
+     */
     private static int currentYear = 2022;
+
+    /*
+    *What the program does:
+    *A year is selected. All events that occurred that year are parsed for all countries that hosted an event.
+    * A country is selected. All events in that country during that year are displayed. An event is selected.
+    * All matches are stored from that event. All matches are parsed for all team names. Matches are broken
+    * down for all relevant data and stored in robot, alliance, and match data formats. scoresByTeam is made
+    * and stores all individual robot data per match in a list and stores it as a value with each key being
+    * the team number. Scoring data is used to determine the various OPRs and averages, data that is used as
+    * a predictive/advisory metric. That data is organized in a summary sheet by team. There are individual
+    * team pages that display individual match data. This is stored to a file in a location that is selected
+    * in a prompt by the user. A rerun prompt is shown to ask whether or not the user wants to rerun the
+    * program to select another competition.
+    */
 
     public static void main(String[] args) throws Exception {
         try {
@@ -86,9 +109,7 @@ public class Main {
             try (FileOutputStream outputStream = new FileOutputStream(saveFile)) {
                 workbook.write(outputStream);
             }
-
-            int confirmation = UI.reRun();
-            if(confirmation == JOptionPane.YES_OPTION){
+            if(UI.reRun()){
                 String[] E = new String[0];
                 main(E);
             }

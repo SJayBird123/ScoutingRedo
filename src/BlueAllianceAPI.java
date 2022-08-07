@@ -10,19 +10,42 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * Class where the API is accessed and JSON data is parsed and sorted.
+ */
 public class BlueAllianceAPI {
 
+    /**
+     * The key used to access TBA.
+     */
     private final String apiKey;
-
+    /**
+     * The current year.
+     */
     private int year;
+    /**
+     * The year that was selected for scouting data.
+     */
     private int currentYear;
 
+    /**
+     * Set the API key, current year, and selected year.
+     * @param apiKey The key used to access TBA.
+     * @param currentYear The current year.
+     * @param selectedYear The year that was selected for scouting data.
+     */
     public BlueAllianceAPI(String apiKey, int currentYear, int selectedYear) {
         this.apiKey = apiKey;
         year = selectedYear;
         this.currentYear = currentYear;
     }
 
+    /**
+     * Used to connect to and pull a raw JSONArray from a specific URL on TBA.
+     * @param endpoint The specific URL ending we pull data from.
+     * @return A JSONArray of all the data from a specific call.
+     * @throws Exception
+     */
     public JSONArray apiCall(String endpoint) throws Exception {
         URL matchesURL = new URL("https://www.thebluealliance.com/api/v3/" + endpoint);
         HttpsURLConnection con = (HttpsURLConnection) matchesURL.openConnection();
@@ -40,7 +63,12 @@ public class BlueAllianceAPI {
         }
     }
 
-
+    /**
+     * Returns all countries that hosted an event by using apiCall() to get all events and then parsing through
+     * them for all unique countries.
+     * @return An ArrayList of all countries that hosted an event.
+     * @throws Exception
+     */
     public ArrayList<String> returnCountries() throws Exception {
         JSONArray eventsRaw = apiCall("events/" + year + "/simple");
         ArrayList<String> countries = new ArrayList<>();
@@ -70,6 +98,12 @@ public class BlueAllianceAPI {
         return countries;
     }
 
+    /**
+     * Returns all event keys and event names for a particular country, including "irrelevant" events.
+     * @param country Accepts country name to return events from.
+     * @return A LinkedHashMap of all event keys (Key) and the event names (Value).
+     * @throws Exception
+     */
     public LinkedHashMap<String, String> returnAllEvents(String country) throws Exception {
         JSONArray eventsRaw = apiCall("events/" + year);
         LinkedHashMap<String, String> events = new LinkedHashMap<>();
@@ -101,6 +135,13 @@ public class BlueAllianceAPI {
         return events;
     }
 
+    /**
+     * Returns list of match objects by parsing an apiCall() for matches from a specific event. Matches are sorted for
+     * quals and broken down by alliance data.
+     * @param eventId The unique key for the event.
+     * @return A List of type Match.
+     * @throws Exception
+     */
     public List<Match> getMatchBreakdowns(String eventId) throws Exception {
         JSONArray matches = apiCall("event/" + eventId + "/matches");
 
@@ -115,6 +156,7 @@ public class BlueAllianceAPI {
 
             Match match = new Match();
 
+            //Fun comment written in 2022 I decided to keep in the redo lol
             //This is a yikes added 940am mar 5 to bypass null exception thrown cuz no one has scores yet
             try {
                 match.matchNumber = ((Number) rawMatch.get("match_number")).intValue();
@@ -131,6 +173,13 @@ public class BlueAllianceAPI {
         return results;
     }
 
+    /**
+     * Returns alliance data for a given match and color.
+     * @param rawMatch The raw JSONObject containing a data regard a specific match.
+     * @param allianceColor The alliance color to break down.
+     * @return An AllianceScore object containing information for the chosen alliance.
+     * @throws Exception
+     */
     private AllianceScore extractBreakdowns(JSONObject rawMatch, String allianceColor) throws Exception{
         JSONObject alliances = (JSONObject) rawMatch.get("alliances");
         JSONObject currentAlliance = (JSONObject) alliances.get(allianceColor);
@@ -181,8 +230,16 @@ public class BlueAllianceAPI {
         return alliance;
     }
 
-    /* Weird problem where for 2022week0 there were teams in the finals that didnt play any quals !?!?!?
+    /**
+     * Meant to return all team numbers in order but it turned out sometimes teams participate without playing in
+     * the quals and get included in the teams call. Funny thing is I think we ran into this exact problem in the
+     * beginning of build season 2022 and I completely forgot when remaking lol. Don't use this method.
+     * @param eventId The unique key for the event.
+     * @return Nothing don't use this method
+     * @throws Exception
+     */
     public List<Integer> getTeamNamesBad(String eventId) throws Exception {
+        /* Weird problem where for 2022week0 there were teams in the finals that didnt play any quals !?!?!?
         JSONArray teamNamesRaw = apiCall("event/" + eventId + "/teams/keys");
         List<Integer> teamNames= new ArrayList<>();
 
@@ -192,13 +249,21 @@ public class BlueAllianceAPI {
 
         Collections.sort(teamNames);
         return teamNames;
-    }
-    */
 
-    public List<Integer> getTeamNames(List<BlueAllianceAPI.Match> matches) throws Exception {
+    */
+        return null;
+    }
+
+    /**
+     * Returns all team numbers in order by parsing the List of Match objects for all unique team numbers
+     * @param matches List of all Match objects for selected event
+     * @return List of team numbers in order
+     * @throws Exception
+     */
+    public List<Integer> getTeamNames(List<Match> matches) throws Exception {
         List<Integer> teamNames= new ArrayList<>();
 
-        for(BlueAllianceAPI.Match match : matches){
+        for(Match match : matches){
             List<IndividualTeamInfo> resultsRaw = match.getAllBreakdowns();
 
             for(IndividualTeamInfo teamInfo : resultsRaw){
@@ -222,7 +287,9 @@ public class BlueAllianceAPI {
         return teamNames;
     }
 
-
+    /**
+     * Each team's individual data per alliance.
+     */
     public static class IndividualTeamInfo {
         int teamId;
         String robotNumber;
@@ -232,6 +299,10 @@ public class BlueAllianceAPI {
         String taxi;
         String endgame;
 
+        /**
+         * Returns the number of points earned in hang state (2022). Also fancy switch statement. :)
+         * @return int of endgame's corresponding value
+         */
         public int getClimbPoints() {
             return switch (endgame) {
                 case "Low" -> 4;
@@ -243,6 +314,9 @@ public class BlueAllianceAPI {
         }
     }
 
+    /**
+     * Each alliance's data per match.
+     */
     public static class AllianceScore {
         int matchNumber;
 
@@ -267,11 +341,24 @@ public class BlueAllianceAPI {
         int endgamePoints;
     }
 
+    /**
+     * Each match's data.
+     */
     public static class Match{
         int matchNumber;
+        /**
+         * Red alliance breakdown, including individual team data.
+         */
         AllianceScore red;
+        /**
+         * Blue alliance breakdown, including individual team data.
+         */
         AllianceScore blue;
 
+        /**
+         * Returns all individual team data for every team in the match, for both alliances.
+         * @return List of IndividualTeamInfo
+         */
         public List<IndividualTeamInfo> getAllBreakdowns() {
             List<IndividualTeamInfo> result = new ArrayList<>();
             result.addAll(red.teams);
